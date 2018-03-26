@@ -86,45 +86,37 @@ function orderAlphabetically(movies){
 }
 
 // Best yearly rate average
-function bestYearAvg(movies){
-
-  if(movies.length === 0) { return undefined }
-
+function bestYearAvg(movies) {
+  if (movies.length === 0) { return undefined; }
   var disctintYears = [];
-
-  var aux = movies.map(function(e){
-    if(disctintYears.indexOf(e.year) == -1){
-      disctintYears.push({ year: e.year, rate: 0, films: 0});
+  var aux = [];
+ movies.forEach(function (e) {
+    if (!aux.includes(e.year)) {
+      aux.push(e.year);
+      disctintYears.push({ year: e.year, rate: 0, films: 0 });
     }
-  })
-  
-  aux = [];
-  
-  for(var i=0; i<disctintYears.length; i++){
-    movies.forEach(function(e){
-      if(e.year === disctintYears[i].year){
-        if(e.rate === ''){
-          disctintYears[i].rate += 0;
-          disctintYears[i].films += 1;
+  });
+  disctintYears.forEach(function(y) {
+    movies.forEach(function (e) {
+      if (e.year === y.year) {
+        if (!e.rate) {
+          return;
         } else {
-          disctintYears[i].rate += parseFloat(e.rate);
-          disctintYears[i].films += 1;
+          y.rate += parseFloat(e.rate);
+          y.films += 1;
         }
       }
     });
-    disctintYears[i].rate = parseFloat(disctintYears[i].rate / disctintYears[i].films);
-  }
-  
+    y.rate = parseFloat(y.rate / y.films);
+  });
   disctintYears.sort(function(a,b) { 
     if (a.rate === b.rate) {
       if (a.year < b.year) {
         return -1;
-      } else {
+      } 
         return 1;
-      }
+      
     }
-    return a.rate - b.rate;} );
-
-  return "The best year was " + disctintYears[0].year + " with an average rate of " + disctintYears[0].rate;
-
+    return b.rate - a.rate;});
+  return 'The best year was ' + disctintYears[0].year + ' with an average rate of ' + disctintYears[0].rate;
 }
